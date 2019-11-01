@@ -6,17 +6,19 @@ $_REQUEST 是传输的 post get 的值，可以是数组、json等形式。$_POS
 
 
 ```
-// 发送数据
+// 请求接口，发送参数
 $db= array('db'=>'all');
 $res = sendSQL($db);
 $data = json_decode($res, true);
 echo "<pre>";
 var_dump($res);
+// if (0 == $data['code']) {
+    // ...
+// }
 exit;
 
 function sendSQL($sql){
-    // $url = $this->workflowBaseUrl."/general/data_lineage/dd-api_parse_sql.php";
-    $url = "http://workflow.test/general/data_lineage/api/dd-api_parse_sql.php";
+    $url = "http://workflow.test/api/dd_xx.php";
     // $header = array('Content-Type: Application/json;charset=utf-8');
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -32,15 +34,16 @@ function sendSQL($sql){
     // }else{
     //     return '';
     // }
+    // 此处在外面判断 code 状态更好
     return $output;
 }
 
-// 接收数据
+// 接收参数，返回数据
 $receivedData = file_get_contents('php://input', 'r');
-// $receivedData = $_REQUEST['db'];
+// $receivedData = $_REQUEST['agrs'];
 
 if (!empty($receivedData)) {
-    // arguments
+    // process arguments
     $result = fncGetResultByArgs($receivedData);
     if (empty($result)) {
         $data['code'] = 2;
