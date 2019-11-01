@@ -1,9 +1,12 @@
 ### PHP 接收数据 $_REQUEST 和 php://input
 
-简单笼统来说，php://input 是以流的形式传数据，可以是个 json 字符串。$_REQUEST 是传输的 post get 的值
+简单笼统来说，php://input 是以流的形式传数据，是字符串的形式。php://input 不能用于 enctype=multipart/form-data 类型的数据。
+$_REQUEST 是传输的 post get 的值，可以是数组、json等形式。$_POST 是 Content-Type 为 application/x-www-form-urlencoded 或者为   multipart/form-data 时 http 的 body 中的数据。
+当请求方式是 post 类型， 且 enctype 不是 multipart/form-data 类型时， php://input 中的数据才等于 $_POST 中的数据。
 
 
 ```
+// 发送数据
 $db= array('db'=>'all');
 $res = sendSQL($db);
 $data = json_decode($res, true);
@@ -32,7 +35,7 @@ function sendSQL($sql){
     return $output;
 }
 
-// 接收
+// 接收数据
 $receivedData = file_get_contents('php://input', 'r');
 // $receivedData = $_REQUEST['db'];
 
